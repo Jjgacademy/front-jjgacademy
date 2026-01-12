@@ -1,0 +1,320 @@
+.curso-detalle {
+  padding: 30px;
+}
+
+.curso-banner {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(90deg, #3f6096, #052861);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.curso-banner h1 {
+  color: white;
+  text-align: center;
+}
+
+.curso-content {
+  margin-top: 30px;
+  font-size: 18px;
+}
+
+/* ========================= */
+/* LAYOUT DE VIDEOS */
+/* ========================= */
+
+.curso-layout {
+  display: grid;
+  grid-template-columns: 3fr 1.2fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* VIDEO PRINCIPAL */
+.video-player {
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  padding-top: 56.25%; /* 16:9 */
+}
+
+.video-player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* LISTA DE CLASES */
+.video-list {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* ITEM DE VIDEO */
+.video-item {
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: #f3f6fb;
+}
+
+.video-item:hover {
+  background: #e6ecf8;
+}
+
+.video-item.active {
+  background: linear-gradient(135deg, #0b3c61, #1e88e5);
+  color: #ffffff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .curso-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .video-list {
+    max-height: none;
+  }
+}
+
+/* =========================
+   CERTIFICADO
+========================= */
+
+.certificate-box {
+  margin-top: 40px;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  max-width: 900px;
+}
+
+.certificate-box h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #052861;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* CONTENEDOR INPUTS */
+.certificate-box input,
+.certificate-box select {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  margin-bottom: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.certificate-box input:focus,
+.certificate-box select:focus {
+  border-color: #1e88e5;
+}
+
+/* BOTONES */
+.certificate-box button {
+  margin-top: 10px;
+  padding: 12px 20px;
+  background: linear-gradient(90deg, #1e88e5, #0b3c61);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.certificate-box button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(30, 136, 229, 0.4);
+}
+
+/* TEXTO CONFIRMADO */
+.certificate-box p {
+  font-size: 15px;
+  color: #2e7d32;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .certificate-box {
+    padding: 20px;
+  }
+
+  .certificate-box input,
+  .certificate-box select {
+    max-width: 100%;
+  }
+}
+
+/* ===================================================
+   🔥 NUEVO: TARJETA BONITA DE CERTIFICADO REGISTRADO
+   (NO rompe nada de lo anterior)
+=================================================== */
+
+.certificate-summary {
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f5f9ff, #ffffff);
+  border-left: 6px solid #1e88e5;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  max-width: 520px;
+}
+
+.certificate-summary p {
+  margin: 0 0 10px 0;
+  font-size: 15px;
+  color: #0b3c61;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.certificate-summary strong {
+  color: #052861;
+}
+
+.certificate-summary button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #0b3c61, #1e88e5);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.certificate-summary button:hover {
+  box-shadow: 0 6px 18px rgba(30, 136, 229, 0.4);
+}
+
+/* =========================
+   MATERIAL DE APOYO
+========================= */
+
+.video-item.material {
+  margin-top: 14px;
+  background: linear-gradient(135deg, #f5f9ff, #e9f0ff);
+  border: 2px dashed #1e88e5;
+  color: #052861;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  text-decoration: none;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.video-item.material:hover {
+  background: linear-gradient(135deg, #1e88e5, #0b3c61);
+  color: #ffffff;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30, 136, 229, 0.35);
+}
+
+/* Ícono más grande */
+.video-item.material::before {
+  content: "";
+  font-size: 20px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .video-item.material {
+    font-size: 15px;
+    padding: 12px;
+  }
+}
+
+/* =========================
+   CERTIFICADO – FORMULARIO SIMPLE
+========================= */
+
+.certificate-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+/* INPUT NOMBRE */
+.certificate-form input {
+  flex: 1;
+  min-width: 260px;
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #dcdcdc;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.certificate-form input:focus {
+  border-color: #1e88e5;
+  box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.15);
+}
+
+/* BOTÓN GENERAR */
+.certificate-form button {
+  padding: 12px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #1e88e5, #0b3c61);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.certificate-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(30, 136, 229, 0.35);
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .certificate-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .certificate-form button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,56 @@
+.mis-cursos {
+  padding: 40px;
+  text-align: center;
+}
+
+.mis-cursos h1 {
+  margin-bottom: 25px;
+  color: #052861;
+}
+
+/* GRID */
+.cursos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+/* TARJETA */
+.curso-card {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background-image: url("/fondo-curso.jpg"); /* Puedes cambiar luego */
+  background-size: cover;
+  background-position: center;
+  transition: transform .3s, box-shadow .3s;
+}
+
+/* EFECTO HOVER */
+.curso-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0px 12px 25px rgba(0,0,0,0.3);
+}
+
+/* CAPA OSCURA */
+.curso-overlay {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.1));
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  padding: 15px;
+  pointer-events: none;
+}
+
+/* TEXTO */
+.curso-overlay h3 {
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+}

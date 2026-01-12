@@ -1,0 +1,26 @@
+/* ===== RESET GENERAL ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== CONFIG GLOBAL ===== */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #f2f6ff;      /* Fondo claro bonito */
+  font-family: system-ui, Arial, Helvetica, sans-serif;
+}
+
+/* Elimina estilos raros de Vite */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
