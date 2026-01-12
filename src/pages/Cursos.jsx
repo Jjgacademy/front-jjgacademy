@@ -16,6 +16,7 @@ export default function Cursos() {
     "CONTABILIDAD Y TRIBUTACIÓN SECTOR CONSTRUCCIÓN",
     "IMPUESTO A LA RENTA PN NO OBLIGADAS A LLEVAR CONTABILIDAD",
     "CIERRE FISCAL",
+    "ANEXO RDP",
   ];
 
   return (
