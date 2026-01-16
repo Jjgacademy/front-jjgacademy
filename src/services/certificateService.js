@@ -21,7 +21,7 @@ export async function downloadCertificate(courseId) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(
-    `http://localhost:4000/api/certificates/${courseId}/download`,
+    `http://174.138.84.230/api/certificates/${courseId}/download`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

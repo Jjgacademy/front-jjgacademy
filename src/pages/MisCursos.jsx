@@ -31,12 +31,12 @@ export default function MisCursos() {
 
         // 🔥 ADMIN → ver TODOS los cursos
         if (currentUser.role === "admin") {
-          url = "http://localhost:4000/api/courses/all";
+          url = "http://174.138.84.230/api/courses/all";
         }
 
         // 🔥 Usuario normal → solo sus cursos asignados
         else {
-          url = `http://localhost:4000/api/courses/user/${currentUser.id}`;
+          url = `http://174.138.84.230/api/courses/user/${currentUser.id}`;
         }
 
         const res = await fetch(url);
