@@ -21,7 +21,7 @@ export async function downloadCertificate(courseId) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(
-    `http://174.138.84.230/api/certificates/${courseId}/download`,
+    `https://jjgacademy.com/api/api/certificates/${courseId}/download`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
