@@ -14,8 +14,8 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // 🔹 SOLO CIERRE FISCAL USA CIUDADES
-  const isCierreFiscal = Number(id) === 13;
+  // ✅ CIERRE FISCAL ES ID = 3 (CORREGIDO)
+  const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
   const [videos, setVideos] = useState([]);
@@ -65,6 +65,7 @@ export default function CursoDetalle() {
       return;
     }
 
+    // ✅ Validación SOLO para Cierre Fiscal
     if (isCierreFiscal && !city) {
       alert("Selecciona la ciudad");
       return;
@@ -128,7 +129,7 @@ export default function CursoDetalle() {
                 </div>
               ))}
 
-              {/* 📁 MATERIAL DINÁMICO POR CURSO */}
+              {/* 📁 MATERIAL */}
               {materials.map((mat) => (
                 <a
                   key={mat.id}
@@ -158,7 +159,7 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                {/* 👇 SOLO CIERRE FISCAL */}
+                {/* ✅ SOLO CIERRE FISCAL (ID = 3) */}
                 {isCierreFiscal && (
                   <select
                     value={city}
@@ -187,7 +188,7 @@ export default function CursoDetalle() {
                     <strong> {certificate.full_name}</strong>
                   </p>
 
-                  {/* 👇 SOLO CIERRE FISCAL */}
+                  {/* ✅ SOLO CIERRE FISCAL */}
                   {isCierreFiscal && (
                     <p className="certificate-item">
                       📍 Ciudad:
