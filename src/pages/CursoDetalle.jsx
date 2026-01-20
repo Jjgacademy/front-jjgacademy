@@ -14,7 +14,7 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // ✅ CIERRE FISCAL ES ID = 3
+  // 👉 El backend exige ciudad SOLO para el curso 3
   const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
@@ -35,16 +35,13 @@ export default function CursoDetalle() {
   useEffect(() => {
     async function loadData() {
       try {
-        // Videos
         const vids = await getVideosByCourse(id);
         setVideos(vids);
         if (vids.length > 0) setCurrentVideo(vids[0]);
 
-        // Material
         const mats = await getMaterialsByCourse(id);
         setMaterials(mats);
 
-        // Certificado
         const cert = await getCertificate(id);
         if (cert) setCertificate(cert);
       } catch (error) {
@@ -58,27 +55,27 @@ export default function CursoDetalle() {
     loadData();
   }, [id]);
 
-  // 🔹 Guardar certificado (CORREGIDO)
+  // 🔹 Guardar certificado (ROBUSTO)
   const handleCreateCertificate = async () => {
-    if (!fullName) {
+    if (!fullName.trim()) {
       alert("Ingresa tu nombre completo");
       return;
     }
 
-    // ✅ Validación SOLO para Cierre Fiscal
+    // ❗ SOLO exigir ciudad cuando el backend la exige
     if (isCierreFiscal && !city) {
       alert("Selecciona la ciudad");
       return;
     }
 
     try {
-      // ✅ Payload limpio (NO enviar city si no aplica)
       const payload = {
         course_id: Number(id),
-        full_name: fullName,
+        full_name: fullName.trim(),
       };
 
-      if (isCierreFiscal) {
+      // ✅ Enviar ciudad SOLO si existe
+      if (city) {
         payload.city = city;
       }
 
@@ -87,7 +84,7 @@ export default function CursoDetalle() {
       setCertificate(cert);
       alert("Certificado generado correctamente");
     } catch (error) {
-      alert(error.message || "Error guardando certificado");
+      alert(error?.message || "Error guardando certificado");
     }
   };
 
@@ -135,7 +132,6 @@ export default function CursoDetalle() {
                 </div>
               ))}
 
-              {/* 📁 MATERIAL */}
               {materials.map((mat) => (
                 <a
                   key={mat.id}
@@ -165,18 +161,16 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                {/* ✅ SOLO CIERRE FISCAL (ID = 3) */}
-                {isCierreFiscal && (
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                  >
-                    <option value="">Selecciona ciudad</option>
-                    <option value="quito">Quito</option>
-                    <option value="guayaquil">Guayaquil</option>
-                    <option value="cuenca">Cuenca</option>
-                  </select>
-                )}
+                {/* ✅ SIEMPRE mostrar selector de ciudad */}
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                >
+                  <option value="">Selecciona ciudad</option>
+                  <option value="quito">Quito</option>
+                  <option value="guayaquil">Guayaquil</option>
+                  <option value="cuenca">Cuenca</option>
+                </select>
 
                 <button onClick={handleCreateCertificate}>
                   Generar certificado
@@ -194,8 +188,7 @@ export default function CursoDetalle() {
                     <strong> {certificate.full_name}</strong>
                   </p>
 
-                  {/* ✅ SOLO CIERRE FISCAL */}
-                  {isCierreFiscal && (
+                  {certificate.city && (
                     <p className="certificate-item">
                       📍 Ciudad:
                       <strong> {certificate.city}</strong>
