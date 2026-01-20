@@ -14,7 +14,7 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // ✅ CIERRE FISCAL ES ID = 3 (CORREGIDO)
+  // ✅ CIERRE FISCAL ES ID = 3
   const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
@@ -58,7 +58,7 @@ export default function CursoDetalle() {
     loadData();
   }, [id]);
 
-  // 🔹 Guardar certificado
+  // 🔹 Guardar certificado (CORREGIDO)
   const handleCreateCertificate = async () => {
     if (!fullName) {
       alert("Ingresa tu nombre completo");
@@ -72,11 +72,17 @@ export default function CursoDetalle() {
     }
 
     try {
-      const cert = await createCertificate({
-        course_id: id,
+      // ✅ Payload limpio (NO enviar city si no aplica)
+      const payload = {
+        course_id: Number(id),
         full_name: fullName,
-        city: isCierreFiscal ? city : null,
-      });
+      };
+
+      if (isCierreFiscal) {
+        payload.city = city;
+      }
+
+      const cert = await createCertificate(payload);
 
       setCertificate(cert);
       alert("Certificado generado correctamente");
