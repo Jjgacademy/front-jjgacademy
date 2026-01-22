@@ -14,8 +14,8 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // 🔒 SOLO estos cursos tienen certificado (según backend)
-  const courseHasCertificate = Number(id) === 3; // CIERRE FISCAL
+  // ✅ SOLO Cierre Fiscal usa ciudad
+  const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
   const [videos, setVideos] = useState([]);
@@ -31,7 +31,7 @@ export default function CursoDetalle() {
   const [city, setCity] = useState("");
   const [loadingCert, setLoadingCert] = useState(true);
 
-  // 🔹 Cargar datos del curso
+  // 🔹 Cargar datos del curso (TODOS)
   useEffect(() => {
     async function loadData() {
       try {
@@ -42,11 +42,9 @@ export default function CursoDetalle() {
         const mats = await getMaterialsByCourse(id);
         setMaterials(mats);
 
-        // ✅ SOLO consultar certificado si el curso lo soporta
-        if (courseHasCertificate) {
-          const cert = await getCertificate(id);
-          if (cert) setCertificate(cert);
-        }
+        // ✅ TODOS los cursos pueden tener certificado
+        const cert = await getCertificate(id);
+        if (cert) setCertificate(cert);
       } catch (error) {
         console.error("Error cargando datos", error);
       } finally {
@@ -56,7 +54,7 @@ export default function CursoDetalle() {
     }
 
     loadData();
-  }, [id, courseHasCertificate]);
+  }, [id]);
 
   // 🔹 Generar certificado
   const handleCreateCertificate = async () => {
@@ -65,7 +63,8 @@ export default function CursoDetalle() {
       return;
     }
 
-    if (!city) {
+    // ❗ SOLO cierre fiscal exige ciudad
+    if (isCierreFiscal && !city) {
       alert("Selecciona la ciudad");
       return;
     }
@@ -74,8 +73,12 @@ export default function CursoDetalle() {
       const payload = {
         course_id: Number(id),
         full_name: fullName.trim(),
-        city,
       };
+
+      // ✅ Enviar city SOLO para cierre fiscal
+      if (isCierreFiscal) {
+        payload.city = city;
+      }
 
       const cert = await createCertificate(payload);
       setCertificate(cert);
@@ -141,8 +144,8 @@ export default function CursoDetalle() {
           </div>
         )}
 
-        {/* 🎓 CERTIFICADO SOLO SI EL CURSO LO SOPORTA */}
-        {courseHasCertificate && !loadingCert && (
+        {/* 🎓 CERTIFICADO — SIEMPRE VISIBLE */}
+        {!loadingCert && (
           <>
             <h3 style={{ marginTop: "40px" }}>🎓 Certificado</h3>
 
@@ -155,15 +158,18 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                <select
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                >
-                  <option value="">Selecciona ciudad</option>
-                  <option value="quito">Quito</option>
-                  <option value="guayaquil">Guayaquil</option>
-                  <option value="cuenca">Cuenca</option>
-                </select>
+                {/* ✅ CIUDAD SOLO PARA CIERRE FISCAL */}
+                {isCierreFiscal && (
+                  <select
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  >
+                    <option value="">Selecciona ciudad</option>
+                    <option value="quito">Quito</option>
+                    <option value="guayaquil">Guayaquil</option>
+                    <option value="cuenca">Cuenca</option>
+                  </select>
+                )}
 
                 <button onClick={handleCreateCertificate}>
                   Generar certificado
