@@ -14,9 +14,6 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // ✅ SOLO Cierre Fiscal usa ciudad
-  const isCierreFiscal = Number(id) === 3;
-
   // 🎥 Videos
   const [videos, setVideos] = useState([]);
   const [currentVideo, setCurrentVideo] = useState(null);
@@ -42,7 +39,6 @@ export default function CursoDetalle() {
         const mats = await getMaterialsByCourse(id);
         setMaterials(mats);
 
-        // ✅ COMO ANTES: intentar obtener certificado para TODOS
         const cert = await getCertificate(id);
         if (cert) setCertificate(cert);
       } catch (error) {
@@ -56,15 +52,14 @@ export default function CursoDetalle() {
     loadData();
   }, [id]);
 
-  // 🔹 Generar certificado
+  // 🔹 Generar certificado (SIN CONDICIONES)
   const handleCreateCertificate = async () => {
     if (!fullName.trim()) {
       alert("Ingresa tu nombre completo");
       return;
     }
 
-    // ❗ SOLO cierre fiscal exige ciudad
-    if (isCierreFiscal && !city) {
+    if (!city) {
       alert("Selecciona la ciudad");
       return;
     }
@@ -73,12 +68,8 @@ export default function CursoDetalle() {
       const payload = {
         course_id: Number(id),
         full_name: fullName.trim(),
+        city,
       };
-
-      // ✅ city SOLO para cierre fiscal
-      if (isCierreFiscal) {
-        payload.city = city;
-      }
 
       const cert = await createCertificate(payload);
       setCertificate(cert);
@@ -144,7 +135,7 @@ export default function CursoDetalle() {
           </div>
         )}
 
-        {/* 🎓 CERTIFICADO */}
+        {/* 🎓 CERTIFICADO (ORIGINAL) */}
         {!loadingCert && (
           <>
             <h3 style={{ marginTop: "40px" }}>🎓 Certificado</h3>
@@ -158,18 +149,15 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                {/* ✅ CIUDAD SOLO PARA CIERRE FISCAL */}
-                {isCierreFiscal && (
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                  >
-                    <option value="">Selecciona ciudad</option>
-                    <option value="quito">Quito</option>
-                    <option value="guayaquil">Guayaquil</option>
-                    <option value="cuenca">Cuenca</option>
-                  </select>
-                )}
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                >
+                  <option value="">Selecciona ciudad</option>
+                  <option value="quito">Quito</option>
+                  <option value="guayaquil">Guayaquil</option>
+                  <option value="cuenca">Cuenca</option>
+                </select>
 
                 <button onClick={handleCreateCertificate}>
                   Generar certificado
