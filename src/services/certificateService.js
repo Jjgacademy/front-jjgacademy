@@ -15,7 +15,8 @@ export async function getCertificate(courseId) {
 }
 
 /**
- * 🔹 Descargar certificado en PDF (cuando quiera)
+ * 🔹 Descargar certificado en PDF
+ * 👉 Maneja correctamente cuando el PDF aún no existe
  */
 export async function downloadCertificate(courseId) {
   const token = localStorage.getItem("token");
@@ -23,16 +24,26 @@ export async function downloadCertificate(courseId) {
   const res = await fetch(
     `https://jjgacademy.com/api/api/certificates/${courseId}/download`,
     {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }
   );
 
-  if (!res.ok) {
-    throw new Error("Error descargando certificado");
+  // 🟡 Caso normal: el PDF aún no está generado
+  if (res.status === 404) {
+    throw new Error(
+      "El certificado aún no está disponible. Intenta nuevamente en unos segundos."
+    );
   }
 
+  // 🔴 Otros errores reales
+  if (!res.ok) {
+    throw new Error("No se pudo descargar el certificado");
+  }
+
+  // ✅ Descargar archivo
   const blob = await res.blob();
   const url = window.URL.createObjectURL(blob);
 
