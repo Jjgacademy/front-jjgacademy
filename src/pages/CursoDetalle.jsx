@@ -14,7 +14,7 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // 👉 El backend exige ciudad SOLO para el curso 3
+  // 👉 SOLO el curso Cierre Fiscal exige ciudad (id = 3)
   const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
@@ -31,7 +31,7 @@ export default function CursoDetalle() {
   const [city, setCity] = useState("");
   const [loadingCert, setLoadingCert] = useState(true);
 
-  // 🔹 Cargar datos
+  // 🔹 Cargar datos del curso
   useEffect(() => {
     async function loadData() {
       try {
@@ -55,14 +55,14 @@ export default function CursoDetalle() {
     loadData();
   }, [id]);
 
-  // 🔹 Guardar certificado (ROBUSTO)
+  // 🔹 Generar certificado (ROBUSTO)
   const handleCreateCertificate = async () => {
     if (!fullName.trim()) {
       alert("Ingresa tu nombre completo");
       return;
     }
 
-    // ❗ SOLO exigir ciudad cuando el backend la exige
+    // ❗ SOLO exigir ciudad para Cierre Fiscal
     if (isCierreFiscal && !city) {
       alert("Selecciona la ciudad");
       return;
@@ -74,14 +74,14 @@ export default function CursoDetalle() {
         full_name: fullName.trim(),
       };
 
-      // ✅ Enviar ciudad SOLO si existe
-      if (city) {
+      // ✅ Enviar ciudad SOLO si es Cierre Fiscal
+      if (isCierreFiscal) {
         payload.city = city;
       }
 
       const cert = await createCertificate(payload);
-
       setCertificate(cert);
+
       alert("Certificado generado correctamente");
     } catch (error) {
       alert(error?.message || "Error guardando certificado");
@@ -161,16 +161,18 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                {/* ✅ SIEMPRE mostrar selector de ciudad */}
-                <select
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                >
-                  <option value="">Selecciona ciudad</option>
-                  <option value="quito">Quito</option>
-                  <option value="guayaquil">Guayaquil</option>
-                  <option value="cuenca">Cuenca</option>
-                </select>
+                {/* ✅ CIUDAD SOLO PARA CIERRE FISCAL */}
+                {isCierreFiscal && (
+                  <select
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  >
+                    <option value="">Selecciona ciudad</option>
+                    <option value="quito">Quito</option>
+                    <option value="guayaquil">Guayaquil</option>
+                    <option value="cuenca">Cuenca</option>
+                  </select>
+                )}
 
                 <button onClick={handleCreateCertificate}>
                   Generar certificado
