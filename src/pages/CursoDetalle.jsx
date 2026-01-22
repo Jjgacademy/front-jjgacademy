@@ -14,7 +14,7 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // 👉 SOLO Cierre Fiscal (id = 3) usa ciudad
+  // 🔒 SOLO CIERRE FISCAL TIENE CERTIFICADO
   const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
@@ -31,14 +31,7 @@ export default function CursoDetalle() {
   const [city, setCity] = useState("");
   const [loadingCert, setLoadingCert] = useState(true);
 
-  // 🔹 Limpia ciudad cuando NO es Cierre Fiscal
-  useEffect(() => {
-    if (!isCierreFiscal) {
-      setCity("");
-    }
-  }, [isCierreFiscal]);
-
-  // 🔹 Cargar datos del curso
+  // 🔹 Cargar datos
   useEffect(() => {
     async function loadData() {
       try {
@@ -49,8 +42,11 @@ export default function CursoDetalle() {
         const mats = await getMaterialsByCourse(id);
         setMaterials(mats);
 
-        const cert = await getCertificate(id);
-        if (cert) setCertificate(cert);
+        // 👉 SOLO consultar certificado si el curso lo permite
+        if (isCierreFiscal) {
+          const cert = await getCertificate(id);
+          if (cert) setCertificate(cert);
+        }
       } catch (error) {
         console.error("Error cargando datos", error);
       } finally {
@@ -60,16 +56,16 @@ export default function CursoDetalle() {
     }
 
     loadData();
-  }, [id]);
+  }, [id, isCierreFiscal]);
 
-  // 🔹 Generar certificado (SIN ROMPER NADA)
+  // 🔹 Generar certificado (SOLO PARA CIERRE FISCAL)
   const handleCreateCertificate = async () => {
     if (!fullName.trim()) {
       alert("Ingresa tu nombre completo");
       return;
     }
 
-    if (isCierreFiscal && !city) {
+    if (!city) {
       alert("Selecciona la ciudad");
       return;
     }
@@ -78,12 +74,8 @@ export default function CursoDetalle() {
       const payload = {
         course_id: Number(id),
         full_name: fullName.trim(),
+        city,
       };
-
-      // 👉 SOLO se envía city en Cierre Fiscal
-      if (isCierreFiscal) {
-        payload.city = city;
-      }
 
       const cert = await createCertificate(payload);
       setCertificate(cert);
@@ -149,7 +141,8 @@ export default function CursoDetalle() {
           </div>
         )}
 
-        {!loadingCert && (
+        {/* 🎓 CERTIFICADO: SOLO PARA CIERRE FISCAL */}
+        {isCierreFiscal && !loadingCert && (
           <>
             <h3 style={{ marginTop: "40px" }}>🎓 Certificado</h3>
 
@@ -162,18 +155,15 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                {/* ✅ SOLO Cierre Fiscal */}
-                {isCierreFiscal && (
-                  <select
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                  >
-                    <option value="">Selecciona ciudad</option>
-                    <option value="quito">Quito</option>
-                    <option value="guayaquil">Guayaquil</option>
-                    <option value="cuenca">Cuenca</option>
-                  </select>
-                )}
+                <select
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                >
+                  <option value="">Selecciona ciudad</option>
+                  <option value="quito">Quito</option>
+                  <option value="guayaquil">Guayaquil</option>
+                  <option value="cuenca">Cuenca</option>
+                </select>
 
                 <button onClick={handleCreateCertificate}>
                   Generar certificado
@@ -191,12 +181,10 @@ export default function CursoDetalle() {
                     <strong> {certificate.full_name}</strong>
                   </p>
 
-                  {certificate.city && (
-                    <p className="certificate-item">
-                      📍 Ciudad:
-                      <strong> {certificate.city}</strong>
-                    </p>
-                  )}
+                  <p className="certificate-item">
+                    📍 Ciudad:
+                    <strong> {certificate.city}</strong>
+                  </p>
 
                   <button
                     className="certificate-download-btn"
