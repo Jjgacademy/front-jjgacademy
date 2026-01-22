@@ -14,7 +14,7 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // 👉 SOLO el curso Cierre Fiscal exige ciudad (id = 3)
+  // 👉 SOLO Cierre Fiscal (id = 3) usa ciudad
   const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
@@ -31,12 +31,12 @@ export default function CursoDetalle() {
   const [city, setCity] = useState("");
   const [loadingCert, setLoadingCert] = useState(true);
 
-  // 🔹 LIMPIAR CIUDAD CUANDO NO ES CIERRE FISCAL (CAMBIO CLAVE)
+  // 🔹 Limpia ciudad cuando NO es Cierre Fiscal
   useEffect(() => {
     if (!isCierreFiscal) {
       setCity("");
     }
-  }, [id, isCierreFiscal]);
+  }, [isCierreFiscal]);
 
   // 🔹 Cargar datos del curso
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function CursoDetalle() {
     loadData();
   }, [id]);
 
-  // 🔹 Generar certificado
+  // 🔹 Generar certificado (SIN ROMPER NADA)
   const handleCreateCertificate = async () => {
     if (!fullName.trim()) {
       alert("Ingresa tu nombre completo");
@@ -80,6 +80,7 @@ export default function CursoDetalle() {
         full_name: fullName.trim(),
       };
 
+      // 👉 SOLO se envía city en Cierre Fiscal
       if (isCierreFiscal) {
         payload.city = city;
       }
@@ -161,7 +162,7 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                {/* ✅ SOLO aparece en Cierre Fiscal */}
+                {/* ✅ SOLO Cierre Fiscal */}
                 {isCierreFiscal && (
                   <select
                     value={city}
