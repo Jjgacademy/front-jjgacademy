@@ -14,7 +14,7 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // ✅ SOLO Cierre Fiscal usa ciudad y descarga PDF
+  // ✅ SOLO Cierre Fiscal usa ciudad
   const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
@@ -42,7 +42,7 @@ export default function CursoDetalle() {
         const mats = await getMaterialsByCourse(id);
         setMaterials(mats);
 
-        // ✅ Intentar obtener certificado (si no existe, no rompe)
+        // ✅ COMO ANTES: intentar obtener certificado para TODOS
         const cert = await getCertificate(id);
         if (cert) setCertificate(cert);
       } catch (error) {
@@ -75,7 +75,7 @@ export default function CursoDetalle() {
         full_name: fullName.trim(),
       };
 
-      // ✅ Enviar city SOLO para cierre fiscal
+      // ✅ city SOLO para cierre fiscal
       if (isCierreFiscal) {
         payload.city = city;
       }
@@ -144,7 +144,7 @@ export default function CursoDetalle() {
           </div>
         )}
 
-        {/* 🎓 CERTIFICADO — SIEMPRE VISIBLE */}
+        {/* 🎓 CERTIFICADO */}
         {!loadingCert && (
           <>
             <h3 style={{ marginTop: "40px" }}>🎓 Certificado</h3>
@@ -177,24 +177,18 @@ export default function CursoDetalle() {
               </div>
             ) : (
               <div className="certificate-card">
-                {isCierreFiscal ? (
-                  <button
-                    className="certificate-download-btn"
-                    onClick={async () => {
-                      try {
-                        await downloadCertificate(id);
-                      } catch (err) {
-                        alert(err.message);
-                      }
-                    }}
-                  >
-                    ⬇ Descargar certificado en PDF
-                  </button>
-                ) : (
-                  <p style={{ color: "#666", marginTop: "10px" }}>
-                    📄 Este curso no tiene descarga de certificado en PDF.
-                  </p>
-                )}
+                <button
+                  className="certificate-download-btn"
+                  onClick={async () => {
+                    try {
+                      await downloadCertificate(id);
+                    } catch (err) {
+                      alert(err.message);
+                    }
+                  }}
+                >
+                  ⬇ Descargar certificado en PDF
+                </button>
               </div>
             )}
           </>
