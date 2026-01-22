@@ -31,6 +31,13 @@ export default function CursoDetalle() {
   const [city, setCity] = useState("");
   const [loadingCert, setLoadingCert] = useState(true);
 
+  // 🔹 LIMPIAR CIUDAD CUANDO NO ES CIERRE FISCAL (CAMBIO CLAVE)
+  useEffect(() => {
+    if (!isCierreFiscal) {
+      setCity("");
+    }
+  }, [id, isCierreFiscal]);
+
   // 🔹 Cargar datos del curso
   useEffect(() => {
     async function loadData() {
@@ -55,14 +62,13 @@ export default function CursoDetalle() {
     loadData();
   }, [id]);
 
-  // 🔹 Generar certificado (ROBUSTO)
+  // 🔹 Generar certificado
   const handleCreateCertificate = async () => {
     if (!fullName.trim()) {
       alert("Ingresa tu nombre completo");
       return;
     }
 
-    // ❗ SOLO exigir ciudad para Cierre Fiscal
     if (isCierreFiscal && !city) {
       alert("Selecciona la ciudad");
       return;
@@ -74,7 +80,6 @@ export default function CursoDetalle() {
         full_name: fullName.trim(),
       };
 
-      // ✅ Enviar ciudad SOLO si es Cierre Fiscal
       if (isCierreFiscal) {
         payload.city = city;
       }
@@ -90,12 +95,10 @@ export default function CursoDetalle() {
 
   return (
     <div className="curso-detalle">
-      {/* BANNER */}
       <div className="curso-banner">
         <h1>Curso #{id}</h1>
       </div>
 
-      {/* CONTENIDO */}
       <div className="curso-content">
         <h3>🎥 Videos del curso</h3>
 
@@ -107,7 +110,6 @@ export default function CursoDetalle() {
 
         {!loadingVideos && videos.length > 0 && currentVideo && (
           <div className="curso-layout">
-            {/* VIDEO PRINCIPAL */}
             <div className="video-player">
               <iframe
                 src={currentVideo.video_url}
@@ -118,7 +120,6 @@ export default function CursoDetalle() {
               />
             </div>
 
-            {/* LISTA + MATERIAL */}
             <div className="video-list">
               {videos.map((video) => (
                 <div
@@ -147,7 +148,6 @@ export default function CursoDetalle() {
           </div>
         )}
 
-        {/* CERTIFICADO */}
         {!loadingCert && (
           <>
             <h3 style={{ marginTop: "40px" }}>🎓 Certificado</h3>
@@ -161,7 +161,7 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                {/* ✅ CIUDAD SOLO PARA CIERRE FISCAL */}
+                {/* ✅ SOLO aparece en Cierre Fiscal */}
                 {isCierreFiscal && (
                   <select
                     value={city}
