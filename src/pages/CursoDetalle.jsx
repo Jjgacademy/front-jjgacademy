@@ -14,7 +14,7 @@ import "../css/cursoDetalle.css";
 export default function CursoDetalle() {
   const { id } = useParams();
 
-  // ✅ SOLO Cierre Fiscal usa ciudad
+  // ✅ SOLO Cierre Fiscal usa ciudad y descarga PDF
   const isCierreFiscal = Number(id) === 3;
 
   // 🎥 Videos
@@ -31,7 +31,7 @@ export default function CursoDetalle() {
   const [city, setCity] = useState("");
   const [loadingCert, setLoadingCert] = useState(true);
 
-  // 🔹 Cargar datos del curso (TODOS)
+  // 🔹 Cargar datos del curso
   useEffect(() => {
     async function loadData() {
       try {
@@ -42,7 +42,7 @@ export default function CursoDetalle() {
         const mats = await getMaterialsByCourse(id);
         setMaterials(mats);
 
-        // ✅ TODOS los cursos pueden tener certificado
+        // ✅ Intentar obtener certificado (si no existe, no rompe)
         const cert = await getCertificate(id);
         if (cert) setCertificate(cert);
       } catch (error) {
@@ -177,18 +177,24 @@ export default function CursoDetalle() {
               </div>
             ) : (
               <div className="certificate-card">
-                <button
-                  className="certificate-download-btn"
-                  onClick={async () => {
-                    try {
-                      await downloadCertificate(id);
-                    } catch (err) {
-                      alert(err.message);
-                    }
-                  }}
-                >
-                  ⬇ Descargar certificado en PDF
-                </button>
+                {isCierreFiscal ? (
+                  <button
+                    className="certificate-download-btn"
+                    onClick={async () => {
+                      try {
+                        await downloadCertificate(id);
+                      } catch (err) {
+                        alert(err.message);
+                      }
+                    }}
+                  >
+                    ⬇ Descargar certificado en PDF
+                  </button>
+                ) : (
+                  <p style={{ color: "#666", marginTop: "10px" }}>
+                    📄 Este curso no tiene descarga de certificado en PDF.
+                  </p>
+                )}
               </div>
             )}
           </>
