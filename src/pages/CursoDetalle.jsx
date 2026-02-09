@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
 import { useEffect, useState } from "react";
 
 import { getVideosByCourse } from "../services/videoService";
@@ -13,9 +14,20 @@ import "../css/cursoDetalle.css";
 
 export default function CursoDetalle() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  console.log("Curso ID:", id);
 
   // 🎥 Videos
   const [videos, setVideos] = useState([]);
+  // 🔧 ADMIN VIDEO
+  const [mostrarFormVideo, setMostrarFormVideo] = useState(false);
+  const [nuevoVideo, setNuevoVideo] = useState({
+    title: "",
+    url: "",
+  });
+
+  // ⚠️ luego lo conectamos con roles reales
+  const esAdmin = true;
   const [currentVideo, setCurrentVideo] = useState(null);
   const [loadingVideos, setLoadingVideos] = useState(true);
 
@@ -24,23 +36,44 @@ export default function CursoDetalle() {
 
   // 🎓 Certificado
   const [certificate, setCertificate] = useState(null);
+  const [examPassed, setExamPassed] = useState(false);
   const [fullName, setFullName] = useState("");
   const [city, setCity] = useState("");
   const [loadingCert, setLoadingCert] = useState(true);
 
   // 🔹 Cargar datos del curso
   useEffect(() => {
+    if (!id) return;
+
     async function loadData() {
       try {
+        // 🎥 videos
         const vids = await getVideosByCourse(id);
         setVideos(vids);
         if (vids.length > 0) setCurrentVideo(vids[0]);
 
+        // 📁 materiales
         const mats = await getMaterialsByCourse(id);
         setMaterials(mats);
 
+        // 🎓 certificado
         const cert = await getCertificate(id);
         if (cert) setCertificate(cert);
+
+        // ✅ verificar si aprobó examen
+        const res = await fetch(
+          `http://localhost:25060/api/exam/result/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          setExamPassed(data.aprobado === true);
+        }
       } catch (error) {
         console.error("Error cargando datos", error);
       } finally {
@@ -87,7 +120,60 @@ export default function CursoDetalle() {
       </div>
 
       <div className="curso-content">
-        <h3>🎥 Videos del curso</h3>
+        <div className="flex justify-between items-center mb-3">
+          <h3>🎥 Videos del curso</h3>
+
+          {esAdmin && (
+            <button
+              onClick={() => setMostrarFormVideo(true)}
+              className="bg-primary text-white px-4 py-2 rounded-md text-sm"
+            >
+              + Agregar video
+            </button>
+          )}
+        </div>
+        {mostrarFormVideo && (
+          <div className="certificate-form" style={{ marginBottom: "20px" }}>
+            <input
+              placeholder="Título del video"
+              value={nuevoVideo.title}
+              onChange={(e) =>
+                setNuevoVideo({ ...nuevoVideo, title: e.target.value })
+              }
+            />
+
+            <input
+              placeholder="URL Vimeo embed"
+              value={nuevoVideo.url}
+              onChange={(e) =>
+                setNuevoVideo({ ...nuevoVideo, url: e.target.value })
+              }
+            />
+
+            <button
+              onClick={async () => {
+                await fetch("http://localhost:25060/api/videos", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    title: nuevoVideo.title,
+                    video_url: nuevoVideo.url,
+                    course_id: Number(id),
+                  }),
+                });
+
+                setMostrarFormVideo(false);
+
+                // recargar videos
+                const vids = await getVideosByCourse(id);
+                setVideos(vids);
+                if (vids.length > 0) setCurrentVideo(vids[0]);
+              }}
+            >
+              Guardar video
+            </button>
+          </div>
+        )}
 
         {loadingVideos && <p>Cargando videos...</p>}
 
@@ -131,16 +217,25 @@ export default function CursoDetalle() {
                   📁 {mat.title}
                 </a>
               ))}
+              <div
+                className="video-item exam-button"
+                onClick={() => navigate("/exam/3")}
+              >
+                📝 Dar examen final
+              </div>
             </div>
           </div>
         )}
-
-        {/* 🎓 CERTIFICADO (ORIGINAL) */}
+        {/* 🎓 CERTIFICADO */}
         {!loadingCert && (
           <>
             <h3 style={{ marginTop: "40px" }}>🎓 Certificado</h3>
 
-            {!certificate ? (
+            {!examPassed ? (
+              <p style={{ color: "red" }}>
+                Debes aprobar el examen para generar el certificado.
+              </p>
+            ) : !certificate ? (
               <div className="certificate-form">
                 <input
                   type="text"
@@ -149,10 +244,7 @@ export default function CursoDetalle() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
 
-                <select
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                >
+                <select value={city} onChange={(e) => setCity(e.target.value)}>
                   <option value="">Selecciona ciudad</option>
                   <option value="quito">Quito</option>
                   <option value="guayaquil">Guayaquil</option>
