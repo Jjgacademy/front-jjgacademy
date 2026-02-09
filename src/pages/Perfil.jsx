@@ -6,24 +6,6 @@ export default function Perfil() {
   const [seccion, setSeccion] = useState("perfil");
 
   const comunidades = [
-    {
-      id: 1,
-      nombre: "Conexión Contable",
-      slug: "conexion-contable",
-      miembros: 588,
-      tipo: "Gratis",
-      rol: "Administrador",
-      logo: "/logos/conexion-contable.png",
-    },
-    {
-      id: 2,
-      nombre: "Excel Profesional",
-      slug: "excel-profesional",
-      miembros: 198,
-      tipo: "Premium",
-      rol: "Miembro",
-      logo: "/logos/excel.png",
-    },
   ];
 
   return (
