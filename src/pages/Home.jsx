@@ -12,26 +12,6 @@ const comunidades = [
     miembros: 587,
     precio: "Acceso premium",
   },
-  {
-    id: 2,
-    slug: "conexion-contable",
-    nombre: "Conexión Contable",
-    descripcion:
-      "Actualización tributaria y contable aplicada al contexto ecuatoriano.",
-    categoria: "Tributación",
-    miembros: 312,
-    precio: "$100",
-  },
-  {
-    id: 3,
-    slug: "excel-profesional",
-    nombre: "Excel Profesional",
-    descripcion:
-      "Excel, automatización y herramientas prácticas para profesionales.",
-    categoria: "Excel",
-    miembros: 198,
-    precio: "$80",
-  },
 ];
 
 function getNombre(user) {
