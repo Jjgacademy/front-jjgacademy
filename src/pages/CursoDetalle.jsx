@@ -219,7 +219,7 @@ export default function CursoDetalle() {
               ))}
               <div
                 className="video-item exam-button"
-                onClick={() => navigate("/exam/3")}
+                onClick={() => navigate("/exam/${course.exam_id}")}
               >
                 📝 Dar examen final
               </div>
