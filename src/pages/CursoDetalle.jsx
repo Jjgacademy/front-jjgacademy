@@ -62,7 +62,7 @@ export default function CursoDetalle() {
 
         // ✅ verificar si aprobó examen
         const res = await fetch(
-          `http://localhost:25060/api/exam/result/${id}`,
+          `https://jjgacademy.com/api/exam/result/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -219,7 +219,7 @@ export default function CursoDetalle() {
               ))}
               <div
                 className="video-item exam-button"
-                onClick={() => navigate("/exam/${course.exam_id}")}
+                onClick={() => navigate(`/exam/${id}`)}
               >
                 📝 Dar examen final
               </div>
